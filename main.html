@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ㄱ ㅏ ㅊ</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: flex-end;
+            align-items: flex-start;
+            height: 100vh;
+        }
+        .rectangle {
+            flex: 1;
+            background-color: #F5EFE1;
+            height: 100vh;
+            display: grid;
+            grid-template-rows: repeat(9, 1fr);
+            grid-template-columns: 1fr;
+            justify-items: start;
+            align-items: center;
+            overflow: hidden;
+        }
+        .rectangle div {
+            font-family: "Gmarket Sans", sans-serif;
+            font-size: clamp(20px, 15vw, 150px);
+            font-weight: 800;
+            text-align: left;
+            color: black;
+            white-space: nowrap;
+            background-image: url("pont_background.png");
+            -webkit-text-fill-color: transparent;
+            -webkit-background-clip: text;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+        }
+        .square {
+            width: 50vh;
+            height: 50vh;
+            background-color: black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            color: white;
+            font-family: "Gmarket Sans", sans-serif;
+            font-weight: 600;
+            text-align: center;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer; /* 클릭 가능한 요소로 보이도록 설정 */
+        }
+        .square:hover {
+            background-color: #ffffff;
+            color: #000000;
+        }
+        .square div {
+            font-size: clamp(20px, 13vh, 200px);
+        }
+        .counter {
+            position: absolute;
+            bottom: 5%;
+            right: 5%;
+            font-size: 1px; /* 초기값 (JavaScript에서 덮어씀) */
+            color: white;
+            transition: all 0.3s ease;
+        }
+        .square:hover .counter {
+            color: #000000; /* 숫자도 호버 색상 변경 */
+        }
+    </style>
+</head>
+<body>
+    <!-- 직사각형 부분 -->
+    <div class="rectangle">
+        <div>돈가스돈가스돈가스돈가스돈가스</div>
+        <div>TONKATSUTONKATSUTONKATSUTONKATSU</div>
+        <div>とんかつとんかつとんかつとんかつとんかつとんかつ</div>
+        <div>돈가스돈가스돈가스돈가스돈가스</div>
+        <div>TONKATSUTONKATSUTONKATSUTONKATSU</div>
+        <div>とんかつとんかつとんかつとんかつとんかつとんかつ</div>
+        <div>돈가스돈가스돈가스돈가스돈가스</div>
+        <div>TONKATSUTONKATSUTONKATSUTONKATSU</div>
+        <div>とんかつとんかつとんかつとんかつとんかつとんかつ</div>
+    </div>
+    
+    <!-- 정사각형 부분 -->
+    <div class="container">
+        <div class="square" onclick="increaseCounterAndGoToNext(this, 'counter1')">
+            <div>등심이<br/>맛잘알</div>
+            <div class="counter" id="counter1">0</div>
+        </div>
+        <div class="square" onclick="increaseCounterAndGoToNext(this, 'counter2')">
+            <div>안심이<br/>진짜임</div>
+            <div class="counter" id="counter2">0</div>
+        </div>
+    </div>
+
+    <script>
+        // 숫자를 1씩 증가시키고 저장한 뒤 next.html로 이동
+        function increaseCounterAndGoToNext(squareElement, counterId) {
+            const counter = squareElement.querySelector('.counter');
+            let count = parseInt(counter.textContent) || 0;
+            count += 1;
+            counter.textContent = count;
+
+            // Local Storage에 저장
+            localStorage.setItem(counterId, count);
+
+            // next.html로 이동
+            window.location.href = 'next.html';
+        }
+
+        // Local Storage에서 숫자 로드
+        function loadCounters() {
+            document.querySelectorAll('.counter').forEach(counter => {
+                const id = counter.id;
+                const savedValue = localStorage.getItem(id);
+                if (savedValue !== null) {
+                    counter.textContent = savedValue; // 저장된 값을 불러오기
+                }
+            });
+        }
+
+        // 숫자의 크기를 동적으로 조정하는 함수
+        function adjustCounterSize() {
+            const squares = document.querySelectorAll('.square');
+            squares.forEach(square => {
+                const counter = square.querySelector('.counter');
+                const squareHeight = square.offsetHeight; // 정사각형 높이
+                counter.style.fontSize = `${squareHeight * 0.15}px`; // 숫자 크기: 정사각형 높이의 15%
+            });
+        }
+
+        // 초기 설정 및 화면 크기 변경 시 크기 조정
+        window.addEventListener('resize', adjustCounterSize);
+        window.addEventListener('load', () => {
+            adjustCounterSize();
+            loadCounters(); // 페이지 로드 시 저장된 값 불러오기
+        });
+    </script>
+</body>
+</html>
